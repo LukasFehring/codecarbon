@@ -27,18 +27,14 @@ class CPUTime(Time):
     def add_cpu_time(self, other: "CPUTime") -> "CPUTime":
         return CPUTime(self.seconds + other.seconds)
 
-
+@dataclass
 class GPUTime(Time):
-    def __init__(self, seconds: float, power: int):
-        self.seconds = seconds
-        self.power = power
+    power_threshold: "Power"
 
-    def add_gpu_time(self, other: "GPUTime", power: "Power") -> "GPUTime":
-        if power > self.power:
-            return GPUTime(self.seconds + other.seconds)
-        else:
-            return self
-
+    def add_gpu_time(self, other: float, power: "Power") -> "GPUTime":
+        if power > self.power_threshold:
+            self.seconds += other
+        return self
 
 @dataclass
 class EmissionsPerKWh:
@@ -160,3 +156,15 @@ class Power:
 
     def __mul__(self, factor: float) -> "Power":
         return Power(self.kW * factor)
+
+    def __lt__(self, other: "Power") -> bool:
+        return self.kW < other.kW
+    
+    def __gt__(self, other: "Power") -> bool:
+        return self.kW > other.kW
+    
+    def __ge__(self, other: "Power") -> bool:
+        return self.kW >= other.kW
+    
+    def __le__(self, other: "Power") -> bool:
+        return self.kW <= other.kW
