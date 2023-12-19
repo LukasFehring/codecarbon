@@ -23,6 +23,23 @@ class Time:
         return cls(seconds=seconds)
 
 
+class CPUTime(Time):
+    def add_cpu_time(self, other: "CPUTime") -> "CPUTime":
+        return CPUTime(self.seconds + other.seconds)
+
+
+class GPUTime(Time):
+    def __init__(self, seconds: float, power: int):
+        self.seconds = seconds
+        self.power = power
+
+    def add_gpu_time(self, other: "GPUTime", power: "Power") -> "GPUTime":
+        if power > self.power:
+            return GPUTime(self.seconds + other.seconds)
+        else:
+            return self
+
+
 @dataclass
 class EmissionsPerKWh:
     """
@@ -104,9 +121,7 @@ class Power:
 
     @classmethod
     def from_milli_watts(cls, milli_watts: float) -> "Power":
-        return cls(
-            kW=milli_watts * Power.MILLI_WATTS_TO_WATTS * Power.WATTS_TO_KILO_WATTS
-        )
+        return cls(kW=milli_watts * Power.MILLI_WATTS_TO_WATTS * Power.WATTS_TO_KILO_WATTS)
 
     @classmethod
     def from_watts(cls, watts: float) -> "Power":
