@@ -65,9 +65,9 @@ class GPU(BaseHardware):
         )
 
     def measure_power_and_energy(
-        self, last_duration: float, gpu_ids: Iterable[int] = None
+        self, last_duration: float, gpu_ids: Optional[Iterable[int]] = None
     ) -> Tuple[Power, Energy]:
-        if not gpu_ids:
+        if gpu_ids is None:
             gpu_ids = self._get_gpu_ids()
         all_gpu_details: List[Dict] = self.devices.get_delta(
             Time.from_seconds(last_duration)
@@ -92,6 +92,13 @@ class GPU(BaseHardware):
             )
         )
         return self._total_power, total_energy
+
+    def measure_process_active(self, gpu_ids: Optional[Iterable[int]] = None):
+        if gpu_ids is None:
+            gpu_ids = self._get_gpu_ids()
+        
+        
+
 
     def _get_gpu_ids(self) -> Iterable[int]:
         """
