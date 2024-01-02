@@ -627,13 +627,12 @@ class BaseEmissionsTracker(ABC):
             self._total_energy += energy
             if isinstance(hardware, CPU):
                 self._total_cpu_energy += energy
-                self._cpu_time = CPUTime.add_cpu_time(last_duration)
+                self._cpu_time = self._cpu_time.add_cpu_time(last_duration)
                 self._cpu_power = power
                 logger.info(f"Energy consumed for all CPUs : {self._total_cpu_energy.kWh:.6f} kWh" + f". Total CPU Power : {self._cpu_power.W} W")
             elif isinstance(hardware, GPU):
                 self._total_gpu_energy += energy
                 self._gpu_time = self._gpu_time.add_gpu_time(last_duration, power)
-                energy *= len(self._gpu_ids)
                 self._gpu_power = power
                 logger.info(f"Energy consumed for all GPUs : {self._total_gpu_energy.kWh:.6f} kWh" + f". Total GPU Power : {self._gpu_power.W} W")
             elif isinstance(hardware, RAM):

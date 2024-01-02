@@ -24,8 +24,8 @@ class Time:
 
 
 class CPUTime(Time):
-    def add_cpu_time(self, other: "CPUTime") -> "CPUTime":
-        return CPUTime(self.seconds + other.seconds)
+    def add_cpu_time(self, seconds: int) -> "CPUTime":
+        return CPUTime(self.seconds + seconds)
 
 @dataclass
 class GPUTime(Time):
